@@ -1,0 +1,123 @@
+#include <iostream>
+
+using namespace std;
+
+// Component interface
+class Food {
+protected:
+    string name;
+    int price;
+public:
+    virtual void printName()=0;
+    virtual int getPrice()=0;
+    virtual ~Food() {};
+};
+
+// Concrete Component
+class Pizza : public Food {
+public:
+    Pizza(int p) {
+        this->name = "Pizza";
+        this->price = p;
+    }
+    void printName() override{
+        cout << this->name;
+    }
+    int getPrice() override {
+        return this->price;
+    }
+};
+
+// Concrete Component
+class Hamburger : public Food {
+public:
+    Hamburger(int p) {
+        this->name = "Hamburger";
+        this->price = p;
+    }
+    void printName() override{
+        cout << this->name;
+    }
+    int getPrice() override {
+        return this->price;
+    }
+};
+
+// Base decorator
+class Decorator : public Food {
+protected:
+    Food* wrappee;
+public:
+    Decorator(Food* f) {
+        this->wrappee = f;
+    }
+    void printName() override{
+        this->wrappee->printName();
+    }
+    int getPrice() override {
+        return this->wrappee->getPrice();
+    }
+};
+
+// Concrete decorator
+class Mushrooms : public Decorator{
+public:
+    Mushrooms(Food* f) : Decorator(f){
+        this->name = "mushrooms";
+        this->price = 1;
+    }
+    void printName() override{
+        this->wrappee->printName();
+        cout << " + " << this->name;
+    }
+    int getPrice() override {
+        return this->wrappee->getPrice() + this->price;
+    }
+};
+
+// Concrete decorator
+class Onion : public Decorator{
+public:
+    Onion(Food* f) : Decorator(f){
+        this->name = "onion";
+        this->price = 2;
+    }
+    void printName() override{
+        this->wrappee->printName();
+        cout << " + " << this->name;
+    }
+    int getPrice() override {
+        return this->wrappee->getPrice() + this->price;
+    }
+};
+
+// Concrete decorator
+class Cheese : public Decorator{
+public:
+    Cheese(Food* f) : Decorator(f){
+        this->name = "cheese";
+        this->price = 3;
+    }
+    void printName() override{
+        this->wrappee->printName();
+        cout << " + " << this->name;
+    }
+    int getPrice() override {
+        return this->wrappee->getPrice() + this->price;
+    }
+};
+
+
+int main() {
+    Food* pizza = new Mushrooms(new Onion(new Pizza(20)));
+    pizza->printName();
+    cout << " -> Total: " << pizza->getPrice() << "$" << endl;
+
+    Food* hamburger = new Cheese(new Hamburger(15));
+    hamburger->printName();
+    cout << " -> Total: " << hamburger->getPrice() << "$" << endl;
+
+    delete pizza;
+    delete hamburger;
+    return 0;
+}
