@@ -1,0 +1,88 @@
+#include <iostream>
+
+template <typename T>
+class node {
+    T val;
+    node<T>* next;
+public:
+    node(int v) {
+        this -> val = v;
+        this -> next = nullptr;
+    }
+
+    T getVal() {
+        return this->val;
+    }
+    void setVal(T t) {
+        this->val = t;
+    }
+
+    node<T>* getNext() {
+        return this->next;
+    }
+    void setNext(node<T>* n) {
+        this->next = n;
+    }
+};
+
+template <typename T>
+class linkedList{
+    node<T>* head;
+public:
+    void push_front(T t) {
+        node<T>* newHead = new node<T>(t);
+        newHead->setNext(this->head);
+        this->head = newHead;
+    }
+
+    void push_back(T t) {
+        if (head == nullptr)
+            this->head = new node<T>(t);
+        else {
+            node<T>* current = this->head;
+            while (current->getNext() != nullptr)
+                current = current->getNext();
+            current->setNext(new node<T>(t));
+        }
+    }
+
+    class iterator;
+    iterator begin() {
+        return new iterator(this->head);
+    }
+
+    iterator end() {
+        return new iterator(nullptr);
+    }
+
+    class iterator {
+        node<T>* current;
+        iterator(node<T>* c){
+            this->current = c;
+        }
+
+        iterator& operator++(){
+            iterator i = *this;
+            ++*this;
+            return i;
+        }
+
+        iterator& operator++(int){
+            this->current = this->current->getNext();
+            return *this;
+        }
+
+        bool operator!=(const iterator& i){
+            return this->current != i.current;
+        }
+
+        T operator*(const iterator& i){
+            return i.current->getVal();
+        }
+
+    };
+};
+
+int main() {
+    return 0;
+}
