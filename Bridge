@@ -1,0 +1,113 @@
+#include <iostream>
+
+// Implementation
+class Device {
+public:
+    virtual bool isOn()=0;
+    virtual void turnOn()=0;
+    virtual void turnOff()=0;
+    virtual int getVolume()=0;
+    virtual void setVolume(int vol)=0;
+};
+
+// Concrete Implementation
+class TV : public Device {
+    bool isEnabeld;
+    int volume;
+public:
+    TV() {
+        this-> isEnabeld = false;
+        this-> volume = 0;
+    }
+    bool isOn() override {
+        return this->isEnabeld;
+    }
+    void turnOn() override {
+        this->isEnabeld = true;
+    }
+    void turnOff() override {
+        this->isEnabeld = false;
+    }
+    int getVolume() override {
+        return this->volume;
+    }
+    void setVolume(int vol) override {
+        this->volume = vol;
+    }
+};
+
+// Concrete Implementation
+class Radio : public Device {
+    bool isEnabeld;
+    int volume;
+public:
+    Radio() {
+        this-> isEnabeld = false;
+        this-> volume = 0;
+    }
+    bool isOn() override {
+        return this->isEnabeld;
+    }
+    void turnOn() override {
+        this->isEnabeld = true;
+    }
+    void turnOff() override {
+        this->isEnabeld = false;
+    }
+    int getVolume() override {
+        return this->volume;
+    }
+    void setVolume(int vol) override {
+        this->volume = vol;
+    }
+};
+
+// Abstraction
+class Remote {
+protected:
+    Device* d;
+public:
+    Remote(Device* dp){
+        this->d = dp;
+    }
+    void toggleOnAndOff() {
+        if (d->isOn())
+            d->turnOff();
+        else
+            d->turnOn();
+    }
+
+    void volumeUp(){
+        d->setVolume(d->getVolume() + 1);
+    }
+
+    void volumeDown(){
+        d->setVolume(d->getVolume() - 1);
+    }
+};
+
+// Refined Abstraction
+class AdvancedRemote : public Remote {
+public:
+    AdvancedRemote(Device* d) : Remote(d) {}
+    void mute() {
+        d->setVolume(0);
+    }
+ };
+
+int main() {
+    Remote* simple = new Remote(new Radio);
+    simple->toggleOnAndOff();
+    simple->volumeUp();
+
+    AdvancedRemote* advanced = new AdvancedRemote(new TV);
+    advanced->toggleOnAndOff();
+    advanced->volumeUp();
+    advanced->volumeUp();
+    advanced->mute();
+
+    delete simple;
+    delete advanced;
+
+    return 0;
+}
