@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Component - Employee's interface
+class Employee {
+protected:
+    Employee* parent;
+    string name;
+    int age;
+public:
+    virtual void operation()=0;
+    virtual void addChild(Employee* e) {};
+    virtual Employee* getChild(int i) {};
+    virtual ~Employee(){};
+};
+
+// Composite - A manager does the operation himself and tell his works to do so too
+class Manager : public Employee{
+    vector<Employee*> employees;
+public:
+    Manager(string n, int a) {
+        this->name = n;
+        this->age = a;
+        this->parent = nullptr;
+    }
+    void addChild(Employee* e) {
+        this->employees.push_back(e);
+    }
+
+    Employee* getChild(int i) {
+        return this->employees.at(i);
+    }
+
+    void operation() override {
+        cout << "I am a Manager named " << this->name << " and my age is " << this->age << endl;
+        for (Employee* e:this->employees) {
+            e->operation();
+        }
+    }
+};
+
+// Leaf - A common employee which has no works under his charge
+class Engineer : public Employee{
+public:
+    Engineer(string n, int a) {
+        this->name = n;
+        this->age = a;
+    }
+    void operation() override {
+        cout << "I am an Engineer named " << this->name << " and my age is " << this->age << endl;
+    }
+};
+
+// Leaf - A common employee which has no works under his charge
+class Architect : public Employee{
+public:
+    Architect(string n, int a) {
+        this->name = n;
+        this->age = a;
+    }
+
+    void operation() override {
+        cout << "I am an Architect named " << this->name << " and my age is " << this->age << endl;
+    }
+};
+
+int main() {
+    Employee* bigBoss = new Manager("BigBoss",30);
+    Employee* miniBoss = new Manager("miniBoss",27);
+    Employee* leaf1 = new Engineer("leaf1",20);
+    Employee* leaf2 = new Architect("leaf2",23);
+    Employee* leaf3 = new Architect("leaf3",25);
+    Employee* leaf4 = new Engineer("leaf4",18);
+
+    bigBoss->addChild(leaf1);
+    bigBoss->addChild(miniBoss);
+    bigBoss->addChild(leaf2);
+    miniBoss->addChild(leaf3);
+    miniBoss->addChild(leaf4);
+
+    // execute bigBoss's operation which call the other employee's operation recursively
+    bigBoss->operation();
+
+    // delete  allocated memory
+    delete bigBoss;
+    delete miniBoss;
+    delete leaf1;
+    delete leaf2;
+    delete leaf3;
+    delete leaf4;
+
+    return 0;
+}
