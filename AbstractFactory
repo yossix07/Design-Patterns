@@ -1,0 +1,92 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+// Sword product
+class Sword {
+    // implementation
+};
+
+// Concrete sword product
+class BronzeSword : public Sword{
+    // implementation
+};
+
+// Concrete sword product
+class SilverSword : public Sword{
+    // implementation
+};
+
+// Shield product
+class Shield {
+    // implementation
+};
+
+// Concrete shield product
+class BronzeShield : public Shield{
+    // implementation
+};
+
+// Concrete shield product
+class SilverShield : public Shield{
+    // implementation
+};
+
+// Armory abstract factory
+class Armory {
+public:
+    virtual Sword* createSword()=0;
+    virtual Shield* createShield()=0;
+};
+
+// BronzeArmory concrete factory
+class BronzeArmory : public Armory{
+public:
+    Sword* createSword() override {
+        return new BronzeSword;
+    }
+    Shield* createShield() override{
+        return new BronzeShield;
+    }
+};
+
+// SilverArmory concrete factory
+class SilverArmory : public Armory{
+public:
+    Sword* createSword() override {
+        return new SilverSword;
+    }
+    Shield* createShield() override{
+        return new SilverShield;
+    }
+};
+
+int main() {
+
+    // example of creating a run time dependent armory
+    map<string,Armory*> abstractFactoryMap;
+    abstractFactoryMap["Bronze"] = new BronzeArmory;
+    abstractFactoryMap["bronze"] = new BronzeArmory;
+
+    abstractFactoryMap["Silver"] = new SilverArmory;
+    abstractFactoryMap["silver"] = new SilverArmory;
+
+    string s;
+    cout << "Enter wanted set of tools" << endl;
+    cin >> s;
+
+    Armory* e = abstractFactoryMap[s];
+
+    // create the user's wanted set of armory
+    Sword* sword = e->createSword();
+    Shield* shield = e->createShield();
+
+
+    // deleting all allocated memory
+    delete sword;
+    delete shield;
+    abstractFactoryMap.clear();
+
+    return 0;
+}
