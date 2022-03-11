@@ -1,0 +1,45 @@
+#include <iostream>
+
+/*
+ * singleton is used in order to use a single instance for all references.
+ * when creating new reference, in case the static member is null, set it to a new singleton instance and return it.
+ * in case the member is already set, return it.
+ */
+class singleton{
+    singleton()= default;
+    static singleton* instance;
+    ~singleton() = default;
+public:
+    static singleton* getInstance() {
+        if (instance) {
+            return instance;
+        }
+        instance = new singleton();
+        return instance;
+    }
+
+    static void deleteInstance() {
+        delete instance;
+        instance = nullptr;
+    }
+
+    // deleting constructors to make sure only one instance will be created
+    singleton(const singleton& s) = delete;
+    singleton(singleton&& s) = delete;
+    singleton& operator=(const singleton& s) = delete;
+    singleton& operator=(singleton&& s) = delete;
+};
+
+singleton *singleton::instance = nullptr;
+
+int main() {
+    singleton* s1 = singleton::getInstance();
+    singleton* s2 = singleton::getInstance();
+
+    if (s1 == s2) {
+        std::cout << "same instance!" << std::endl;
+    }
+
+    singleton::deleteInstance();
+    return 0;
+}
