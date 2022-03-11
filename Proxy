@@ -1,0 +1,36 @@
+#include <iostream>
+#include "map"
+using namespace std;
+
+class calculator{
+public:
+     float calculate(const string& toBeCalculated){
+        // implementation (parse the string and calculate the value)
+         return 0;
+     }
+};
+
+/*
+ * A cache proxy - if the expression has already been calculated, return the saved result.
+ * Otherwise, calculate it and save the result in the cache(map).
+ */
+class proxy{
+    calculator* c;
+    map<string,float> history;
+public:
+    proxy(calculator* c){
+        this->c = c;
+    }
+
+    float calculate(const string& toBeCalculated){
+        if (this->history.count(toBeCalculated))
+            return this->history[toBeCalculated];
+        float res = this->c->calculate(toBeCalculated);
+        this->history[toBeCalculated] = res;
+        return res;
+    }
+};
+
+int main() {
+    return 0;
+}
