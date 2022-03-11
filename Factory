@@ -1,0 +1,86 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+// Employee product interface
+class Employee {
+public:
+    virtual void work()=0;
+};
+
+// Concrete employee
+class Manager : public Employee{
+public:
+    void work() override {
+        cout << "I am the manager" << endl;
+    }
+};
+
+// Concrete employee
+class Architect : public Employee{
+public:
+    void work() override {
+        cout << "I am the architect" << endl;
+    }
+};
+
+// Concrete employee
+class Engineer : public Employee{
+public:
+    void work() override {
+        cout << "I am the engineer" << endl;
+    }
+};
+
+
+// Factory interface
+class EmployeeFactory {
+public:
+    virtual Employee* create()=0;
+};
+
+// Concrete ManagerFactory
+class ManagerFactory :public EmployeeFactory {
+    Employee * create() override {
+        return new Manager();
+    }
+};
+
+// Concrete ArchitectFactory
+class ArchitectFactory :public EmployeeFactory {
+    Employee * create() override {
+        return new Architect();
+    }
+};
+
+// Concrete EngineerFactory
+class EngineerFactory :public EmployeeFactory {
+    Employee * create() override {
+        return new Engineer();
+    }
+};
+
+int main() {
+    map<string,EmployeeFactory*> factoryMap;
+    factoryMap["Manager"] = new ManagerFactory;
+    factoryMap["manager"] = new ManagerFactory;
+
+    factoryMap["Architect"] = new ArchitectFactory;
+    factoryMap["architect"] = new ArchitectFactory;
+
+    factoryMap["Engineer"] = new EngineerFactory;
+    factoryMap["engineer"] = new EngineerFactory;
+
+    string s;
+    cout << "Enter wanted employee to be create" << endl;
+    cin >> s;
+
+    EmployeeFactory* e = factoryMap[s];
+    if (e)
+        e->create()->work();
+
+    factoryMap.clear();
+
+    return 0;
+}
