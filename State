@@ -1,0 +1,63 @@
+#include <iostream>
+
+using namespace std;
+
+// state interface
+class state{
+public:
+    virtual void handle()=0;
+    virtual ~state() {};
+};
+
+// concrete state
+class healthy : public state{
+    virtual void handle() override{
+        cout << "walking at 5 km/h" << endl;
+    }
+};
+
+// concrete state
+class damaged : public state{
+    virtual void handle() override{
+        cout << "walking at 1 km/h" << endl;
+    }
+};
+
+// concrete state
+class broken : public state{
+    virtual void handle() override{
+        cout << "can't move :( " << endl;
+    }
+};
+
+// robot which has a health state
+class robot{
+    string name;
+    state* s;
+public:
+    void setState(state* s) {
+        this->s = s;
+    }
+    void walk() const {
+        this->s->handle();
+    }
+    ~robot() {
+        delete this->s;
+    }
+};
+
+
+int main() {
+    robot* a = new robot();
+    a->setState(new healthy());
+    a->walk();
+
+    a->setState(new damaged());
+    a->walk();
+
+    a->setState(new broken());
+    a->walk();
+
+    delete a;
+    return 0;
+}
