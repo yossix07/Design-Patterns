@@ -1,0 +1,56 @@
+#include <iostream>
+#include <utility>
+#include "string"
+
+using namespace std;
+
+class shape{
+    int x,y;
+    string color;
+public:
+    shape(int x, int y, string c){
+        this->x = x;
+        this->y = y;
+        this->color = move(c);
+    }
+
+    ~shape() {};
+
+    int getX() const {
+        return this->x;
+    }
+    int getY() const {
+        return this->y;
+    }
+    string getColor() const {
+        return this->color;
+    }
+    virtual shape* clone()=0;
+};
+
+class rectangle : public shape{
+    int width, height;
+public:
+    rectangle(int x, int y, string c, int w, int h) : shape(x,y,move(c)) {
+        this->width = w;
+        this->height = h;
+    }
+    rectangle(const rectangle& r) : shape(r.getX(),r.getY(),r.getColor()) {
+        this->width = r.width;
+        this->height = r.height;
+    }
+    ~rectangle() {};
+
+    shape* clone() override {
+        return new rectangle(*this);
+    }
+};
+
+int main() {
+    shape* s = new rectangle(3,5,"blue",6,10);
+    shape* cloned = s->clone();
+
+    delete s;
+    delete cloned;
+    return 0;
+}
