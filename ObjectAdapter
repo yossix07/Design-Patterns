@@ -1,0 +1,47 @@
+#include "iostream"
+
+using namespace std;
+
+// New service we want to adapt to - Adaptee.
+// Due to unmatching qualities to the existing code,
+// it is implemented using an adapter that holds a pointer to its instance.
+class Adaptee {
+public:
+    void func() {
+        // new behavior we want to add to the code.
+    }
+};
+
+// Existing class
+class Target {
+public:
+
+    // Existing behavior.
+    virtual void doSomething() {
+
+    }
+};
+
+// Adapter that extends the existing Target.
+// The class holds a pointer to the Adaptee and activate the new service it is providing.
+class Adapter : public Target {
+    Adaptee* a;
+public:
+    Adapter(Adaptee* ap) {
+        this->a = ap;
+    }
+    void doSomething () override {
+        // insert code which required in order to link with the adaptee function.
+
+        // activate new service
+        a->func();
+    }
+};
+
+int main() {
+    Target* t = new Adapter(new Adaptee);
+    t->doSomething();
+
+    delete t;
+    return 0;
+}
